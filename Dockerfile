@@ -32,7 +32,27 @@ RUN apt-get update --fix-missing && \
                        python3-pip \
                        libeigen3-dev \
                        tmux \
+                       curl \
+                       unzip \
                        ros-foxy-rviz2
+
+# yazi dependencies
+RUN apt-get install -y ffmpeg file fzf jq ripgrep fd-find poppler-utils imagemagick xclip && \
+    curl -fsSL https://github.com/ajeetdsouza/zoxide/releases/download/v0.9.9/zoxide_0.9.9-1_amd64.deb -o /tmp/zoxide.deb && \
+    dpkg -i /tmp/zoxide.deb && rm /tmp/zoxide.deb
+
+# yazi
+RUN curl -fsSL https://github.com/sxyazi/yazi/releases/download/v26.1.22/yazi-x86_64-unknown-linux-musl.zip -o /tmp/yazi.zip && \
+    unzip /tmp/yazi.zip -d /tmp/yazi && \
+    mv /tmp/yazi/yazi-x86_64-unknown-linux-musl/yazi /usr/local/bin/ && \
+    mv /tmp/yazi/yazi-x86_64-unknown-linux-musl/ya /usr/local/bin/ && \
+    rm -rf /tmp/yazi*
+
+# zellij
+RUN curl -fsSL https://github.com/zellij-org/zellij/releases/download/v0.41.2/zellij-x86_64-unknown-linux-musl.tar.gz -o /tmp/zellij.tar.gz && \
+    tar -xzf /tmp/zellij.tar.gz -C /usr/local/bin && \
+    rm /tmp/zellij.tar.gz
+
 RUN apt-get -y dist-upgrade
 RUN pip3 install transforms3d
 
@@ -49,6 +69,10 @@ RUN source /opt/ros/foxy/setup.bash && \
     apt-get update --fix-missing && \
     rosdep install -i --from-path src --rosdistro foxy -y && \
     colcon build
+
+RUN echo "source /opt/ros/foxy/setup.bash" >> /root/.bashrc && \
+    mkdir -p /root/.config/zellij && \
+    echo 'default_shell "bash"' > /root/.config/zellij/config.kdl
 
 WORKDIR '/sim_ws'
 ENTRYPOINT ["/bin/bash"]

@@ -25,8 +25,9 @@ services:
   sim:
     image: f1tenth_gym_ros
     build: ./
-    volumes: 
+    volumes:
       - .:/sim_ws/src/f1tenth_gym_ros
+      - /home/shvempat/clonedrepos/f1tenth/lab3_ws/src/test_node:/sim_ws/src/test_node
     environment:
       - DISPLAY=novnc:0.0
     networks:
