@@ -28,6 +28,7 @@ services:
     volumes:
       - .:/sim_ws/src/f1tenth_gym_ros
       - /home/shvempat/clonedrepos/f1tenth/lab3_ws/src/test_node:/sim_ws/src/test_node
+      - /home/shvempat/clonedrepos/f1tenth/lab3_ws/src/wall_follow:/sim_ws/src/wall_follow
     environment:
       - DISPLAY=novnc:0.0
     networks:
